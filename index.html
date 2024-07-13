@@ -23,28 +23,25 @@
       e.preventDefault();
       fetchGif(search.value)})
 
-    function fetchGif(searchTerm){
-      fetch(`https://api.giphy.com/v1/gifs/translate?api_key=0fV8nQPk55xeakGvkPHKhaJj2u4G1dAi&s=${searchTerm}`, {mode: 'cors'})
-      .then((response) =>{
+    async function fetchGif(searchTerm){
+      try {
+        const response = await fetch(`https://api.giphy.com/v1/gifs/translate?api_key=0fV8nQPk55xeakGvkPHKhaJj2u4G1dAi&s=${searchTerm}`, {mode: 'cors'})
+
         if (!response.ok) {
-                throw new Error('Failed to fetch from giphy');
-            }
-        return response.json();
-      })
-      .then((response) => {
-        console.log(response)
-        if(response.data.length !== 0){
-          img.src = (response.data.images.original.url);
+          throw new Error('Failed to fetch from giphy');
+        }
+        const response_json = await response.json();
+        if(response_json.data.length !== 0){
+          img.src = (response_json.data.images.original.url);
           error.textContent = '';
         }
         else{
           img.src = '';
           error.textContent = 'No results found';
         }
-      })
-      .catch((e) => {
+      }catch(e){
         error.textContent = e;
-      })
+      }
     }
   </script>
 </body>
